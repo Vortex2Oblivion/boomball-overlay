@@ -13,12 +13,15 @@ func main() {
 	rl.SetConfigFlags(rl.FlagWindowTopmost)
 	rl.InitWindow(int32(rl.GetScreenWidth()), int32(rl.GetScreenHeight()), "Look at him go!")
 
+	rl.SetTargetFPS(int32(rl.GetMonitorRefreshRate(rl.GetCurrentMonitor())))
+
 	var boomballTexture rl.Texture2D = rl.LoadTexture("7Dogs.png")
-	boomballTexture.Width /= 4
-	boomballTexture.Height /= 4
+	rl.SetTextureFilter(boomballTexture, rl.FilterBilinear)
 	var boomball boomball = NewBoomball(0, 0, boomballTexture)
 
-	rl.SetWindowIcon(*rl.LoadImage("7Dogs.png"))
+	var windowIcon rl.Image = *rl.LoadImage("7Dogs.png")
+	rl.SetWindowIcon(windowIcon)
+	rl.UnloadImage(&windowIcon)
 
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
@@ -30,6 +33,10 @@ func main() {
 		boomball.y = float32(math.Sin(rl.GetTime()*1.5))*(720-float32(boomballTexture.Height)*3) + float32(rl.GetScreenHeight())/2 - float32(boomballTexture.Height)/2
 		boomball.angle = float32(math.Tan(rl.GetTime()*1.5)) * 45
 		boomball.color = rl.ColorFromHSV(float32(rl.GetTime())*15, 1, 1)
+
+		if rl.IsKeyPressed(rl.KeyF1) {
+			boomball.rainbowMode = !boomball.rainbowMode
+		}
 
 		rl.EndDrawing()
 	}
