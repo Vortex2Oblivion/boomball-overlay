@@ -1,4 +1,4 @@
-module boomballtest/boomball
+module boomball/boomball
 
 go 1.24.0
 
